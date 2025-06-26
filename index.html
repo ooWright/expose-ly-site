@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expose-ly - Interview Integrity Tool</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    /* Subtle animated background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(59, 130, 246, 0.05);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .particle:nth-child(1) {
+      width: 30px;
+      height: 30px;
+      top: 20%;
+      left: 15%;
+      animation-delay: 0s;
+    }
+
+    .particle:nth-child(2) {
+      width: 20px;
+      height: 20px;
+      top: 70%;
+      left: 85%;
+      animation-delay: 3s;
+    }
+
+    .particle:nth-child(3) {
+      width: 25px;
+      height: 25px;
+      top: 40%;
+      left: 70%;
+      animation-delay: 6s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
+      50% { transform: translateY(-30px) scale(1.1); opacity: 0.6; }
+    }
+
+    header {
+      background: white;
+      padding: 4rem 2rem;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 2rem auto;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .shield {
+      width: 100%;
+      height: 100%;
+      background: #1e40af;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .checkmark {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #1e40af;
+    }
+
+    .checkmark::after {
+      content: '✓';
+    }
+
+    h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1e293b;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      font-size: 1.5rem;
+      color: #64748b;
+      font-weight: 400;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    .download-section {
+      padding: 3rem 2rem;
+      text-align: center;
+      background: white;
+    }
+
+    .download-btn {
+      display: inline-block;
+      padding: 1.2rem 3rem;
+      background: #3b82f6;
+      color: white;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    }
+
+    .download-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .how-it-works {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .how-it-works h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 3rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .step {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid #e2e8f0;
+    }
+
+    .step:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .step-icon {
+      width: 80px;
+      height: 80px;
+      background: #eff6ff;
+      border-radius: 16px;
+      margin: 0 auto 1.5rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #3b82f6;
+      border: 2px solid #dbeafe;
+    }
+
+    .step h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 1rem;
+    }
+
+    .step p {
+      color: #64748b;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .mission-section {
+      background: white;
+      padding: 4rem 2rem;
+      margin: 3rem 0;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .mission-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .mission-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 2rem;
+    }
+
+    .mission-section p {
+      font-size: 1.2rem;
+      color: #475569;
+      line-height: 1.7;
+    }
+
+
+
+    .contact-section {
+      background: #f8fafc;
+      padding: 3rem 2rem;
+      border-radius: 16px;
+      text-align: center;
+      margin-top: 3rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .contact-section h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 1rem;
+    }
+
+    .contact-section p {
+      font-size: 1.1rem;
+      color: #64748b;
+    }
+
+    .email-link {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .email-link:hover {
+      color: #2563eb;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 1rem;
+      color: #64748b;
+      padding: 3rem 2rem;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+      }
+
+      .how-it-works h2 {
+        font-size: 2rem;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      main {
+        padding: 2rem 1rem;
+      }
+
+      header {
+        padding: 3rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <header>
+    <div class="logo">
+      <div class="shield">
+        <div class="checkmark"></div>
+      </div>
+    </div>
+    <h1>Expose-ly</h1>
+    <p class="tagline">Verify interviewers & scan for spyware during remote interviews</p>
+  </header>
+
+  <div class="download-section">
+    <a href="#" class="download-btn">Download for macOS</a>
+  </div>
+
+  <main>
+    <section class="how-it-works">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">📧</div>
+          <h3>Verify Interviewer</h3>
+          <p>Enter the interviewer's email and send a verification code</p>
+        </div>
+        <div class="step">
+          <div class="step-icon">🛡️</div>
+          <h3>Get Confirmation</h3>
+          <p>The interviewer receives the code to confirm their identity</p>
+        </div>
+        <div class="step">
+          <div class="step-icon">🔍</div>
+          <h3>Start Scanner</h3>
+          <p>Scan for applications that commonly indicate spyware presence</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mission-section">
+      <div class="mission-content">
+        <h2>Our Mission</h2>
+        <p>
+          Expose-ly is a lightweight macOS tool designed to detect unfair external
+          assistance during Zoom interviews. In an era of AI-enhanced cheating,
+          we believe candidates deserve a level playing field. Our mission is to
+          bring transparency, fairness, and trust back to virtual hiring.
+        </p>
+      </div>
+    </section>
+
+    <section class="contact-section">
+      <h2>Contact & Support</h2>
+      <p>
+        Have questions or want to support the mission? Reach out via
+        <a href="mailto:expose.ly.emailcode@gmail.com" class="email-link">expose.ly.emailcode@gmail.com</a>
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Expose-ly. All rights reserved.
+  </footer>
+</body>
+</html>
